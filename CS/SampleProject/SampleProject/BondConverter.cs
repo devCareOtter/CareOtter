@@ -11,6 +11,22 @@ namespace SampleProject
     /// </summary>
     public static class BondTypeAliasConverter
     {
+        public static long? Convert(DateTime? value, long? unused)
+        {
+            if (value.HasValue)
+                return value.Value.Ticks;
+            else
+                return null;
+        }
+
+        public static DateTime? Convert(long? value, DateTime? unused)
+        {
+            if (value.HasValue)
+                return new DateTime(value.Value);
+            else
+                return null;
+        }
+
         public static long Convert(DateTime value, long unused)
         {
             return value.Ticks;
