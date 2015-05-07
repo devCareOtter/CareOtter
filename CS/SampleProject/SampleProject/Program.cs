@@ -70,7 +70,7 @@ namespace SampleProject
             queryString["subscription-key"] = subscriptionId;
             queryString["id"] = id;
 
-            var uri = "https://protoapi.careotter.com/patient/record/?" + queryString;
+            var uri = "https://api.careotter.com/patient/record/?" + queryString;
 
             HttpResponseMessage response = null;
 
@@ -96,7 +96,7 @@ namespace SampleProject
             queryString["subscription-key"] = subscriptionId;
             queryString["id"] = id;
 
-            var uri = "https://protoapi.careotter.com/patient/record/?" + queryString;
+            var uri = "https://api.careotter.com/patient/record/?" + queryString;
 
             var response = await client.GetAsync(uri);
 
