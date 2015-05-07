@@ -1,0 +1,41 @@
+﻿// --------------------------------------------------------------------------------------------------------------------
+//   ______   ________   ______    ______       ______   _________  _________  ______   ______       
+//  /_____/\ /_______/\ /_____/\  /_____/\     /_____/\ /________/\/________/\/_____/\ /_____/\      
+//  \:::__\/ \::: _  \ \\:::_ \ \ \::::_\/_    \:::_ \ \\__.::.__\/\__.::.__\/\::::_\/_\:::_ \ \     
+//   \:\ \  __\::(_)  \ \\:(_) ) )_\:\/___/\    \:\ \ \ \  \::\ \     \::\ \   \:\/___/\\:(_) ) )_   
+//    \:\ \/_/\\:: __  \ \\: __ `\ \\::___\/_    \:\ \ \ \  \::\ \     \::\ \   \::___\/_\: __ `\ \  
+//     \:\_\ \ \\:.\ \  \ \\ \ `\ \ \\:\____/\    \:\_\ \ \  \::\ \     \::\ \   \:\____/\\ \ `\ \ \ 
+//      \_____\/ \__\/\__\/ \_\/ \_\/ \_____\/     \_____\/   \__\/      \__\/    \_____\/ \_\/ \_\/ 
+//
+// <copyright file="BaseItem.cs" company="Care Otter">
+//      2015 Care Otter All rights reserved.
+// </copyright>
+// ----------------------------------------------------------
+
+namespace SampleProject
+
+using DateTime = int64;
+using guid = string;
+
+//Anything serialized in the system should inherit from this base schema
+struct BaseItem
+{
+	0: optional guid Id = nothing;
+	1: optional DateTime CreatedDate = nothing;
+	2: optional DateTime LastModifiedDate = nothing;
+};
+
+struct BaseItemCollection<T>
+{
+	0: nullable<vector<T>> Collection;
+};
+
+struct SampleContainer
+{
+	0: optional string prop;
+};
+
+struct SampleItem: BaseItem
+{
+	0: optional bonded<SampleContainer> sample;
+};
