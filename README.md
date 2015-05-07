@@ -1,2 +1,2 @@
 # CareOtter
-Example client side code for Otter APIs www.CareOtter.com
+Example client side code for Otter APIs coming soon to https://dev.careotter.com/
