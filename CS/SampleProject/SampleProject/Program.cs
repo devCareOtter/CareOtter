@@ -39,10 +39,18 @@ namespace SampleProject
             var item = GetFakeData();
             var id = item.Id.ToString();
             var subId = ConfigurationManager.AppSettings["SubscriptionId"];
+            var url = ConfigurationManager.AppSettings["Url"];
 
-            StoreItem(id, subId, SerializeBaseItem(item)).Wait();
+            Console.WriteLine(String.Format("Saving patient data for {0}", id));
 
-            var retrievedItem = GetItem(id, subId, deserializers["SampleItem"]).Result;
+
+            StoreItem(id, subId, url, SerializeBaseItem(item)).Wait();
+
+            //need a sleep method in here for object to procress
+            Task.Delay(TimeSpan.FromMilliseconds(1000));
+ 
+
+            var retrievedItem = GetItem(id, subId, url, deserializers["SampleItem"]).Result;
 
             //you'll notice that the bonded property is still serialized. It needs to be deserialized before accessing.
             //non bonded fields are not still serialized and can be accessed directly.
@@ -61,7 +69,7 @@ namespace SampleProject
             return output.Data.Array;
         }
 
-        private static async Task StoreItem(string id, string subscriptionId, byte[] data)
+        private static async Task StoreItem(string id, string subscriptionId, string url, byte[] data)
         {
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString("id={id}?subscription-key={subscription-key}");
@@ -70,7 +78,7 @@ namespace SampleProject
             queryString["subscription-key"] = subscriptionId;
             queryString["id"] = id;
 
-            var uri = "https://api.careotter.com/patient/record/?" + queryString;
+            var uri = url + "/webservice/SavePatient?" + queryString;
 
             HttpResponseMessage response = null;
 
@@ -87,7 +95,7 @@ namespace SampleProject
             }
         }
 
-        private static async Task<SampleItem> GetItem(string id, string subscriptionId, Deserializer<SimpleBinaryReader<InputBuffer>> deserializer)
+        private static async Task<SampleItem> GetItem(string id, string subscriptionId, string url, Deserializer<SimpleBinaryReader<InputBuffer>> deserializer)
         {
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString("id={id}?subscription-key={subscription-key}");
@@ -96,7 +104,7 @@ namespace SampleProject
             queryString["subscription-key"] = subscriptionId;
             queryString["id"] = id;
 
-            var uri = "https://api.careotter.com/patient/record/?" + queryString;
+            var uri =  url + "/webservice/GetPatient?" + queryString;
 
             var response = await client.GetAsync(uri);
 
@@ -111,6 +119,12 @@ namespace SampleProject
                 else
                 {
                     var bytes = await response.Content.ReadAsByteArrayAsync();
+
+                    if (bytes.Length  < 1)
+                    {
+                        throw new Exception("Patient not retrevied from service");
+                    }
+
                     var input = new InputBuffer(bytes);
                     var reader = new SimpleBinaryReader<InputBuffer>(input);
 
